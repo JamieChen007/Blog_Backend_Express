@@ -17,12 +17,12 @@ router.post('/login', urlencodedParser, function(req, res, next) {
             req.session.username=data.username
             req.session.realname=data.realname
             
-            res.json(
+            return res.json(
               new SuccessModel()
             ) 
-            return
+            
         }                   
-        res.json(
+        return res.json(
           new ErrorModel('userlogin fail')
         )  
     // res.json({
