@@ -6,6 +6,8 @@ const userlogin = (username,password) => {
     username = escape(username)
     
     password = genPassword(password)
+
+    //console.log(password)
     password = escape(password) 
     
     let sql
