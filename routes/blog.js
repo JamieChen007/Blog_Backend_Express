@@ -14,6 +14,17 @@ router.get('/list', function(req, res, next) {
   const keyword = req.query.keyword || ''
   // const listData = getList(author,keyword)
   // return new SuccessModel(listData)
+
+  if(req.query.isadmin){
+    if(req.session.username == null){
+      res.json(
+        new ErrorModel('no login')
+      )
+      return
+  }
+    author = req.session.username
+  }
+
   const result = getList(author,keyword)
   return result.then(listData=>{
       res.json(new SuccessModel(listData))
