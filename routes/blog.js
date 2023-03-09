@@ -10,17 +10,16 @@ const { SuccessModel,ErrorModel } = require('../model/resModel')
 
 const loginCheck = require('../middleware/loginCheck')
 
-
-
 /* GET home page. */
 router.get('/list', (req, res, next) => {
-  const author = req.query.author || ''
+  var author = req.query.author || ''
   const keyword = req.query.keyword || ''
-  // const listData = getList(author,keyword)
-  // return new SuccessModel(listData)
-
-  if(req.query.isadmin){
+  
+if(req.query.isadmin){
+    console.log('is admin')
+    
     if(req.session.username == null){
+      console.error('is admin,but no login')
       res.json(
         new ErrorModel('no login')
       )
