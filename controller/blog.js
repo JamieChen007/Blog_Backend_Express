@@ -19,7 +19,7 @@ const getDetail = (id) => {
     
     let sql = `select * from blog where id='${id}';`
 
-    console.log('sql is', sql)    
+    
     return exec(sql).then(rows => {
        
         return rows[0]

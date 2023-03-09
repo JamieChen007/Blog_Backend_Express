@@ -8,11 +8,12 @@ const { getList,
   } = require('../controller/blog')
 const { SuccessModel,ErrorModel } = require('../model/resModel')
 
+const loginCheck = require('../middleware/loginCheck')
 
 
 
 /* GET home page. */
-router.get('/list', function(req, res, next) {
+router.get('/list', (req, res, next) => {
   const author = req.query.author || ''
   const keyword = req.query.keyword || ''
   // const listData = getList(author,keyword)
@@ -24,7 +25,7 @@ router.get('/list', function(req, res, next) {
         new ErrorModel('no login')
       )
       return
-  }
+    }
     author = req.session.username
   }
 
@@ -41,7 +42,7 @@ router.get('/list', function(req, res, next) {
   // )
 });
 
-router.get('/detail',function(req, res, next) {
+router.get('/detail',(req, res, next) => {
   
   const id = req.query.id || '' 
   const result = getDetail(id)
@@ -52,31 +53,28 @@ router.get('/detail',function(req, res, next) {
     })
 })
 
-router.get('/search',function(req, res, next) {
+router.get('/search',(req, res, next) => {
     let { isadmin = "", author = "", keyword = "" } = req.query;
     if (isadmin) {
       author = req.session.username;
     }
+    
     const result = getList(author, keyword);
     return result
       .then((data) => {
         res.json(
-          new SuccessModel(data, "查询博客列表成功")
+          new SuccessModel(data, "list blog success")
           )
       })
       .catch((error) => {
         res.json(
-          new ErrorModel("查询博客列表失败：" + error)
+          new ErrorModel("list blog fail:" + error)
           )
       });
 })
 
-router.post('/create', (req,res,next) => {
-      // const loginCheckResult = loginCheck(req)
-      // if(loginCheckResult){
-      //     return loginCheckResult
-      // }
-
+router.post('/create', loginCheck,  (req,res,next) => {
+      
       req.body.author = req.session.username
       const result = newBlog(req.body)
 
@@ -87,11 +85,8 @@ router.post('/create', (req,res,next) => {
       })
 })
 
-router.post('/update', (req,res,next) => {
-      // const loginCheckResult = loginCheck(req)
-      // if(loginCheckResult){
-      //     return loginCheckResult
-      // }
+router.post('/update', loginCheck, (req,res,next) => {
+    
       const id = req.query.id || '' 
       const result = updateBlog(id, req.body)
 
@@ -109,11 +104,8 @@ router.post('/update', (req,res,next) => {
       })
 })
 
-router.post('/delete', (req,res,next) => {
-      // const loginCheckResult = loginCheck(req)
-      // if(loginCheckResult){
-      //     return loginCheckResult
-      // }
+router.post('/delete', loginCheck, (req,res,next) => {
+    
       const id = req.query.id || '' 
       const author=req.session.username
       const result = delBlog(id,author)
